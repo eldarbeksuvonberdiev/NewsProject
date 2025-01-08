@@ -57,4 +57,36 @@ class CategoryController extends Controller
         // return response()->json($response);
         return new CategoryResource($category);
     }
+
+    public function update(Request $request, Category $category)
+    {
+        // dd($request->all(), $category);
+        $data = $request->validate([
+            'name_uz' => 'required',
+            'name_ru' => 'required',
+            'name_en' => 'required',
+            'order' => 'nullable|integer'
+        ]);
+
+        $category->update([
+            'name' => [
+                'uz' => $data['name_uz'],
+                'ru' => $data['name_ru'],
+                'en' => $data['name_en'],
+            ],
+            'order' => $data['order']
+        ]);
+        // dd($category);
+        // return response()->json($response);
+        return new CategoryResource($category);
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+
+        return response()->json([
+            'message' => 'Category successfully deleted!'
+        ]);
+    }
 }
