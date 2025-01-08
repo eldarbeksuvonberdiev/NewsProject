@@ -12,11 +12,11 @@ class Category extends Model
     ];
 
     protected $casts = [
-        'name' =>  'array'
+        'name' => 'array',
     ];
 
     public function news()
     {
-        return $this->hasMany(News::class,'category_id');
+        return $this->hasMany(News::class, 'category_id');
     }
 }

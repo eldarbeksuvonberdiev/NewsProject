@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,12 @@ class CategoryController extends Controller
     {
         $categories = Category::paginate(15);
 
-        $response = [
-            'message' => 'success',
-            'categories' => $categories
-        ];
+        // $response = [
+        //     'message' => 'success',
+        //     'categories' => $categories
+        // ];
 
-        return response()->json($response, 200);
+        return CategoryResource::collection($categories);
     }
 
     public function show(Category $category)
@@ -33,19 +34,27 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'order' => 'nullable'
+            'name_uz' => 'required',
+            'name_ru' => 'required',
+            'name_en' => 'required',
+            'order' => 'nullable|integer'
         ]);
 
-        $category = Category::create($data);
+        $category = Category::create([
+            'name' => [
+                'uz' => $data['name_uz'],
+                'ru' => $data['name_ru'],
+                'en' => $data['name_en'],
+            ],
+            'order' => $data['order']
+        ]);
 
-        $response = [
-            'message' => 'success',
-            'category' => $category
-        ];
+        // $response = [
+        //     'message' => 'success',
+        //     'category' => $category
+        // ];
 
-        return response()->json($response);
+        // return response()->json($response);
+        return new CategoryResource($category);
     }
-
-    
 }
